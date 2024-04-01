@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "651133025567",
+    "firebase_url": "https://weather-21208-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "weather-21208",
+    "storage_bucket": "weather-21208.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651133025567:android:48f8c88383015825d2c42a",
+        "android_client_info": {
+          "package_name": "com.example.weather_monitoring"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcbC09_ID-stk1JVPX_OtWuw5ZppLaE-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
