@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class LogButton extends StatelessWidget {
   void Function()? onPressed;
   final String label;
@@ -9,6 +10,12 @@ class LogButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        shape: const StadiumBorder(),
+        primary: Colors.blue,
+        onPrimary: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 10),
+      ),
       child: SizedBox(
           width: double.infinity,
           child: Text(
@@ -16,12 +23,6 @@ class LogButton extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20),
           )),
-      style: ElevatedButton.styleFrom(
-        shape: const StadiumBorder(),
-        primary: Colors.blue,
-        onPrimary: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 10),
-      ),
     );
   }
 }

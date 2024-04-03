@@ -1,13 +1,14 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:weather_monitoring/wedget/custom_icon_button.dart';
-import 'package:weather_monitoring/wedget/logbutton.dart';
+import 'package:weather_monitoring/model/user.dart';
+import 'package:weather_monitoring/wedget/menu.dart';
 
 class home extends StatefulWidget {
   const home({super.key});
@@ -22,6 +23,19 @@ final databaseReference = FirebaseDatabase.instance.ref("StoreData/data");
 class _homeState extends State<home> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   late Future<Map<String, dynamic>> _dataFuture;
+  String? userName;
+  String status = "user";
+
+  getuser() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    setState(() {
+      userName = querySnapshot.docs[0]['full_name'];
+      status = querySnapshot.docs[0]['status'];
+    });
+  }
 
   @override
   void initState() {
@@ -34,6 +48,7 @@ class _homeState extends State<home> {
     });
     super.initState();
     _dataFuture = fetchData();
+    getuser();
   }
 
   // static const IconData login_outlined =
@@ -84,6 +99,8 @@ class _homeState extends State<home> {
                   _dataFuture = fetchData();
                   now = DateTime.now();
                 });
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil("home", (route) => false);
               },
               child: SvgPicture.asset(
                 'assets/rest.svg',
@@ -370,205 +387,11 @@ class _homeState extends State<home> {
           },
         ),
       ]),
-      drawer: Drawer(
-        backgroundColor: const Color.fromARGB(158, 0, 0, 0),
-        width: 275,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 30, 20, 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          _globalKey.currentState!.closeDrawer();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    child: FirebaseAuth.instance.currentUser == null
-                        ? LogButton(
-                            label: "Loging",
-                            onPressed: () {
-                              Navigator.of(context).pushNamed("login");
-                            },
-                          )
-                        : Profil(),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed("stat");
-                    },
-                    child: const drawItem(
-                      title: "statistics",
-                      icon: Icons.query_stats,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: const drawItem(
-                      title: "Alerts",
-                      icon: Icons.notifications,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed("remot");
-                    },
-                    child: const drawItem(
-                      title: "Control",
-                      icon: Icons.settings,
-                    ),
-                  ),
-                ],
-              ),
-              if (FirebaseAuth.instance.currentUser != null)
-                LogButton(
-                  label: "Log out",
-                  onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil("home", (route) => false);
-                  },
-                ),
-            ],
-          ),
-        ),
+      drawer: Menu(
+        globalKey: _globalKey,
+        userName: userName,
+        status: status,
       ),
     );
   }
 }
-
-class Profil extends StatelessWidget {
-  const Profil({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 65,
-      width: double.maxFinite,
-      child: Card(
-        color: Colors.white38,
-        elevation: 0.4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white, width: 2),
-                    shape: BoxShape.circle),
-                child: const Icon(Icons.person, color: Colors.white, size: 30),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Text(FirebaseAuth.instance.currentUser!.email.toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 16)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class drawItem extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  const drawItem({
-    super.key,
-    required this.title,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: Colors.white,
-            size: 20,
-          ),
-          const SizedBox(
-            width: 50,
-          ),
-          Text(
-            title,
-            style: const TextStyle(color: Colors.white, fontSize: 16),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-
-  
-
-
-// onPressed: () async {
-//               await FirebaseAuth.instance.signOut();
-//               Navigator.of(context)
-//                   .pushNamedAndRemoveUntil("login", (route) => false);
-//             },
-
-// pages[i],
-//       bottomNavigationBar: BottomNavigationBar(
-//         elevation: 0,
-//         type: BottomNavigationBarType.fixed,
-//         onTap: (index) {
-//           setState(() {
-//             i = index;
-//           });
-//         },
-//         backgroundColor: Color.fromARGB(143, 24, 23, 23),
-//         currentIndex: i,
-//         items: const [
-//           BottomNavigationBarItem(
-//             icon: Icon(Ionicons.home_outline),
-//             label: "Home",
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(
-//               Icons.settings,
-//               size: 25,
-//             ),
-//             label: "Control",
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.query_stats),
-//             label: "statistics",
-//           )
-//         ],
-//       ),

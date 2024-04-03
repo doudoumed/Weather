@@ -13,9 +13,7 @@ class remote_page extends StatefulWidget {
 }
 
 final databaseReference = FirebaseDatabase.instance.ref("StoreData/data");
-var state;
-var state_s;
-late bool status;
+bool? status;
 
 class _remote_pageState extends State<remote_page> {
   Future<Map<String, dynamic>> fetchData() async {
@@ -33,12 +31,9 @@ class _remote_pageState extends State<remote_page> {
     // TODO: implement initState
     Map<String, dynamic> data = await fetchData();
     setState(() {
-      state_s = data['counter'];
-      if (state_s == 0) {
-        state = 'ON';
+      if (data['counter'] == 0) {
         status = false;
       } else {
-        state = 'OFF';
         status = true;
       }
     });
@@ -65,8 +60,14 @@ class _remote_pageState extends State<remote_page> {
         Container(
           decoration: BoxDecoration(color: Color.fromARGB(115, 0, 0, 0)),
         ),
-        SensorCard(
-          status: status,
+        Container(
+          child: status == null
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SensorCard(
+                  status: status,
+                ),
         )
       ]),
     );

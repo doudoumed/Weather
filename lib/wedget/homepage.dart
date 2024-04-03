@@ -1,11 +1,8 @@
 import 'dart:convert';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:weather_monitoring/pages/Loging.dart';
 
 class homepage extends StatefulWidget {
   const homepage({super.key});

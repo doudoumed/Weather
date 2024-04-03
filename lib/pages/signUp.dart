@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_monitoring/model/user.dart';
+import 'package:weather_monitoring/wedget/logbutton.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -11,12 +13,17 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   TextEditingController gmail = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController user_name = TextEditingController();
   void create() async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: gmail.text,
         password: password.text,
       );
+      NewUser user = NewUser(
+          email: gmail.text.toLowerCase(), name: user_name.text.toLowerCase());
+      user.addUser();
+
       Navigator.of(context).pushReplacementNamed("home");
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -64,14 +71,19 @@ class _SignUpState extends State<SignUp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 85),
+              const SizedBox(height: 35),
               _icon(),
               const SizedBox(height: 50),
-              _inputField("Username", gmail),
+              _inputField("Username", user_name),
+              const SizedBox(height: 20),
+              _inputField("Gmail", gmail),
               const SizedBox(height: 20),
               _inputField("Password", password, isPassword: true),
               const SizedBox(height: 50),
-              _loginBtn(),
+              LogButton(
+                label: "Sign Up",
+                onPressed: () => create(),
+              ),
               const SizedBox(height: 20),
               _extraText(),
             ],
@@ -109,31 +121,10 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget _loginBtn() {
-    return ElevatedButton(
-      onPressed: () {
-        create();
-      },
-      child: const SizedBox(
-          width: double.infinity,
-          child: Text(
-            "Sign Up ",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20),
-          )),
-      style: ElevatedButton.styleFrom(
-        shape: const StadiumBorder(),
-        primary: Colors.white,
-        onPrimary: Colors.blue,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-      ),
-    );
-  }
-
   Widget _extraText() {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushReplacementNamed("loging");
+        Navigator.of(context).pushReplacementNamed("login");
       },
       child: const Text(
         "Already have an account?",

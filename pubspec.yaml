@@ -43,6 +43,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   firebase_auth: ^4.16.0
   draw_graph: ^1.0.0
+  cloud_firestore: ^4.14.0
 
   
   
