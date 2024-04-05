@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_monitoring/wedget/inputField.dart';
 import 'package:weather_monitoring/wedget/logbutton.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,37 +11,21 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  String passwordError = "";
   Future Loging() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: usernameController.text, password: passwordController.text);
       Navigator.of(context).pushNamed("home");
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
+      setState(() {
+        passwordError = "Wrong password/Email";
+        usernameController = TextEditingController();
+        passwordController = TextEditingController();
+      });
+      print(e.code);
     }
   }
-  // Future signInWithGoogle() async {
-  //   // Trigger the authentication flow
-  //   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-  //   // Obtain the auth details from the request
-  //   final GoogleSignInAuthentication? googleAuth =
-  //       await googleUser?.authentication;
-
-  //   // Create a new credential
-  //   final credential = GoogleAuthProvider.credential(
-  //     accessToken: googleAuth?.accessToken,
-  //     idToken: googleAuth?.idToken,
-  //   );
-
-  //   // Once signed in, return the UserCredential
-  //   await FirebaseAuth.instance.signInWithCredential(credential);
-  //   Navigator.of(context).pushNamedAndRemoveUntil("homepage", (route) => false);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +65,21 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 70),
               _icon(),
               const SizedBox(height: 50),
-              _inputField("Username", usernameController),
+              InputField(
+                controller: usernameController,
+                hintText: "Username",
+              ),
               const SizedBox(height: 20),
-              _inputField("Password", passwordController, isPassword: true),
+              InputField(
+                  hintText: "Password",
+                  controller: passwordController,
+                  isPassword: true),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(passwordError,
+                    style: const TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold)),
+              ),
               const SizedBox(height: 50),
               LogButton(
                 label: "Loging",
@@ -108,28 +105,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _inputField(String hintText, TextEditingController controller,
-      {isPassword = false}) {
-    var border = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(color: Colors.white));
-
-    return TextField(
-      style: const TextStyle(color: Colors.white),
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(color: Colors.white),
-        enabledBorder: border,
-        focusedBorder: border,
-      ),
-      obscureText: isPassword,
-    );
-  }
-
   Widget _googleSign() {
     return ElevatedButton(
       onPressed: () {},
+      style: ElevatedButton.styleFrom(
+        shape: const StadiumBorder(),
+        primary: Color.fromARGB(255, 221, 103, 24),
+        onPrimary: const Color.fromARGB(255, 249, 250, 250),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+      ),
       child: const SizedBox(
           width: double.infinity,
           child: Text(
@@ -137,12 +121,6 @@ class _LoginPageState extends State<LoginPage> {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20),
           )),
-      style: ElevatedButton.styleFrom(
-        shape: const StadiumBorder(),
-        primary: Color.fromARGB(255, 221, 103, 24),
-        onPrimary: const Color.fromARGB(255, 249, 250, 250),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-      ),
     );
   }
 

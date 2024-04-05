@@ -23,18 +23,4 @@ class NewUser {
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
-
-  getuser() async {
-    String a;
-    String b;
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection("users")
-        .where('id', isEqualTo: "${FirebaseAuth.instance.currentUser!.uid}")
-        .get();
-
-    querySnapshot.docs.forEach((element) {
-      name = element['full_name'];
-      status = element['status'];
-    });
-  }
 }
