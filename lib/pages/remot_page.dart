@@ -60,7 +60,8 @@ class _remote_pageState extends State<remote_page> {
         Container(
           decoration: BoxDecoration(color: Color.fromARGB(115, 0, 0, 0)),
         ),
-        Container(
+        Padding(
+          padding: EdgeInsets.all(4.0),
           child: status == null
               ? const Center(
                   child: CircularProgressIndicator(),
@@ -68,7 +69,7 @@ class _remote_pageState extends State<remote_page> {
               : SensorCard(
                   status: status,
                 ),
-        )
+        ),
       ]),
     );
   }

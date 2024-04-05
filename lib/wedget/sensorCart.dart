@@ -15,6 +15,7 @@ class _SensorCardState extends State<SensorCard> {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
             height: 30,
@@ -160,6 +161,33 @@ class _SensorCardState extends State<SensorCard> {
               ),
             ),
           ),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              shape: const StadiumBorder(),
+              primary: Colors.white38,
+              onPrimary: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 10),
+            ),
+            child: const SizedBox(
+                width: 150,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 15, right: 8),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.add,
+                        size: 20,
+                      ),
+                      Text(
+                        "add sensor",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                )),
+          )
           // CATEGORIES
         ],
       ),

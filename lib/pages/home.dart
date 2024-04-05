@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:weather_monitoring/model/user.dart';
 import 'package:weather_monitoring/wedget/menu.dart';
 
 class home extends StatefulWidget {
