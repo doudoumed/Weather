@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_monitoring/model/user.dart';
+import 'package:weather_monitoring/wedget/inputField.dart';
 import 'package:weather_monitoring/wedget/logbutton.dart';
 
 class SignUp extends StatefulWidget {
@@ -23,7 +24,6 @@ class _SignUpState extends State<SignUp> {
       NewUser user = NewUser(
           email: gmail.text.toLowerCase(), name: user_name.text.toLowerCase());
       user.addUser();
-
       Navigator.of(context).pushReplacementNamed("home");
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -74,11 +74,12 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(height: 35),
               _icon(),
               const SizedBox(height: 50),
-              _inputField("Username", user_name),
+              InputField(hintText: "Username", controller: user_name),
               const SizedBox(height: 20),
-              _inputField("Gmail", gmail),
+              InputField(hintText: "Gmail", controller: gmail),
               const SizedBox(height: 20),
-              _inputField("Password", password, isPassword: true),
+              InputField(
+                  hintText: "Password", controller: password, isPassword: true),
               const SizedBox(height: 50),
               LogButton(
                 label: "Sign Up",
@@ -99,25 +100,6 @@ class _SignUpState extends State<SignUp> {
           border: Border.all(color: Colors.white, width: 2),
           shape: BoxShape.circle),
       child: const Icon(Icons.person, color: Colors.white, size: 120),
-    );
-  }
-
-  Widget _inputField(String hintText, TextEditingController controller,
-      {isPassword = false}) {
-    var border = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(color: Colors.white));
-
-    return TextField(
-      style: const TextStyle(color: Colors.white),
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(color: Colors.white),
-        enabledBorder: border,
-        focusedBorder: border,
-      ),
-      obscureText: isPassword,
     );
   }
 
