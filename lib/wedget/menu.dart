@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_monitoring/pages/remot_page.dart';
 import 'package:weather_monitoring/wedget/logbutton.dart';
 
 class Menu extends StatefulWidget {
@@ -35,6 +36,7 @@ class _MenuState extends State<Menu> {
             Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
                       onPressed: () {
@@ -46,6 +48,12 @@ class _MenuState extends State<Menu> {
                         size: 20,
                       ),
                     ),
+                    if (widget.status == "admin")
+                      Text(widget.status,
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 233, 32, 32),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)),
                   ],
                 ),
                 const SizedBox(
@@ -69,7 +77,7 @@ class _MenuState extends State<Menu> {
                             )
                           ],
                         )
-                      : Profil(widget.userName),
+                      : Profil(widget.userName, widget.status),
                 ),
                 const SizedBox(
                   height: 30,
@@ -131,7 +139,7 @@ class _MenuState extends State<Menu> {
   }
 }
 
-Widget Profil(var userName) {
+Widget Profil(var userName, var status) {
   return SizedBox(
     height: 65,
     width: double.maxFinite,
@@ -158,9 +166,10 @@ Widget Profil(var userName) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(FirebaseAuth.instance.currentUser!.email.toString(),
-                    style: TextStyle(color: Colors.white, fontSize: 16)),
-                Text(userName,
-                    style: TextStyle(color: Colors.white, fontSize: 16)),
+                    style: TextStyle(color: Colors.white, fontSize: 14)),
+                if (userName != null)
+                  Text(userName,
+                      style: TextStyle(color: Colors.white, fontSize: 16)),
               ],
             ),
           ],
@@ -202,43 +211,3 @@ class drawItem extends StatelessWidget {
     );
   }
 }
-
-
-  
-
-
-// onPressed: () async {
-//               await FirebaseAuth.instance.signOut();
-//               Navigator.of(context)
-//                   .pushNamedAndRemoveUntil("login", (route) => false);
-//             },
-
-// pages[i],
-//       bottomNavigationBar: BottomNavigationBar(
-//         elevation: 0,
-//         type: BottomNavigationBarType.fixed,
-//         onTap: (index) {
-//           setState(() {
-//             i = index;
-//           });
-//         },
-//         backgroundColor: Color.fromARGB(143, 24, 23, 23),
-//         currentIndex: i,
-//         items: const [
-//           BottomNavigationBarItem(
-//             icon: Icon(Ionicons.home_outline),
-//             label: "Home",
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(
-//               Icons.settings,
-//               size: 25,
-//             ),
-//             label: "Control",
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.query_stats),
-//             label: "statistics",
-//           )
-//         ],
-//       ),

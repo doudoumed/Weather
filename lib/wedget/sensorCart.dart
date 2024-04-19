@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_monitoring/pages/addSensor.dart';
 import 'package:weather_monitoring/pages/remot_page.dart';
 
 class SensorCard extends StatefulWidget {
@@ -162,7 +163,13 @@ class _SensorCardState extends State<SensorCard> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddPlace(),
+                  ));
+            },
             style: ElevatedButton.styleFrom(
               shape: const StadiumBorder(),
               primary: Colors.white38,
