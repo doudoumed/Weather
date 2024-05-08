@@ -5,7 +5,7 @@ import 'package:weather_monitoring/wedget/logbutton.dart';
 
 class Menu extends StatefulWidget {
   String? userName;
-  String status;
+  String? status;
 
   Menu({
     super.key,
@@ -49,7 +49,7 @@ class _MenuState extends State<Menu> {
                       ),
                     ),
                     if (widget.status == "admin")
-                      Text(widget.status,
+                      Text("",
                           style: TextStyle(
                               color: Color.fromARGB(255, 233, 32, 32),
                               fontSize: 16,

@@ -23,7 +23,7 @@ class _homeState extends State<home> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   late Future<Map<String, dynamic>> _dataFuture;
   String? userName;
-  String status = "user";
+  String? status;
 
   getuser() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -160,12 +160,17 @@ class _homeState extends State<home> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    '${data['temperature']}°C',
-                                    style: const TextStyle(
-                                      fontSize: 85,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.white,
+                                  InkWell(
+                                    onTap: () {
+                                      getuser();
+                                    },
+                                    child: Text(
+                                      '${data['temperature']}°C',
+                                      style: const TextStyle(
+                                        fontSize: 85,
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                   Stack(
