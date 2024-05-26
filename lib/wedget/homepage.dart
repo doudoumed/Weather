@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class homepage extends StatefulWidget {
   const homepage({super.key});
@@ -40,6 +42,7 @@ class _homepageState extends State<homepage> {
   DateTime now = DateTime.now();
   DateFormat formatter = DateFormat('HH:mm');
   DateFormat dayformat = DateFormat("EEE M-d yyyy");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,12 +95,14 @@ class _homepageState extends State<homepage> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  '${data['temperature']}°C',
-                                  style: const TextStyle(
-                                    fontSize: 85,
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.white,
+                                InkWell(
+                                  child: Text(
+                                    '${data['temperature']}°C',
+                                    style: const TextStyle(
+                                      fontSize: 85,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                                 Stack(

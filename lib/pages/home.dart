@@ -1,13 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:weather_monitoring/wedget/menu.dart';
+import 'package:share/share.dart';
 
 class home extends StatefulWidget {
   const home({super.key});
@@ -66,6 +71,59 @@ class _homeState extends State<home> {
     }
   }
 
+  final String fileUrl =
+      "https://docs.google.com/spreadsheets/d/1LE9ps6IYIQ58G7f7IecJSTGTGnoVfrLCe0Q5FVDyYt0/gviz/tq?tqx=out:csv&sheet=data_weather";
+  String? filePath;
+
+  Future<void> requestPermissions() async {
+    if (await Permission.storage.request().isGranted) {
+      downloadFile();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content:
+                Text('Storage permission is required to download the file')),
+      );
+    }
+  }
+
+  Future<void> downloadFile() async {
+    try {
+      final directory = await getExternalStorageDirectory();
+      if (directory == null) {
+        throw Exception('Could not find external storage directory');
+      }
+      final path = '${directory.path}/downloaded_sheet.csv';
+      final dio = Dio();
+      final response = await dio.download(fileUrl, path);
+      if (response.statusCode == 200) {
+        setState(() {
+          filePath = path;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('File downloaded to $path')),
+        );
+      } else {
+        print("Failed to download file. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to download file: $e')),
+      );
+    }
+  }
+
+  void _viewFile() {
+    if (filePath != null) {
+      Share.shareFiles([filePath!], text: 'Check out this CSV file');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('File not downloaded yet')),
+      );
+    }
+  }
+
   DateTime now = DateTime.now();
   DateFormat formatter = DateFormat('HH:mm');
   DateFormat dayformat = DateFormat("EEE M-d yyyy");
@@ -94,12 +152,13 @@ class _homeState extends State<home> {
             margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
             child: GestureDetector(
               onTap: () {
-                setState(() {
-                  _dataFuture = fetchData();
-                  now = DateTime.now();
-                });
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil("home", (route) => false);
+                downloadFile();
+                // setState(() {
+                //   _dataFuture = fetchData();
+                //   now = DateTime.now();
+                // });
+                // Navigator.of(context)
+                //     .pushNamedAndRemoveUntil("home", (route) => false);
               },
               child: SvgPicture.asset(
                 'assets/rest.svg',
@@ -162,7 +221,7 @@ class _homeState extends State<home> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      getuser();
+                                      _viewFile();
                                     },
                                     child: Text(
                                       '${data['temperature']}°C',

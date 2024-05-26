@@ -22,30 +22,38 @@ class _stat_pageState extends State<stat_page> {
   List<String> time = [];
 
   Future<void> fetchData() async {
-    while (true) {
-      await Future.delayed(
-          Duration(seconds: 5)); // Adjust the refresh interval as needed
+    final response = await http.get(Uri.parse(
+        'https://script.google.com/macros/s/AKfycbwk0NReEpvzb8FKyHa-i6J3p9gI11C47COfrgI-vHWmhPH6fwvImDPp3vyULe730Q/exec'));
 
-      final response = await http.get(Uri.parse(
-          'https://script.google.com/macros/s/AKfycbwk0NReEpvzb8FKyHa-i6J3p9gI11C47COfrgI-vHWmhPH6fwvImDPp3vyULe730Q/exec'));
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        _dataStreamController.add(data);
-        for (var i = temp.length; i < data.length; i++) {
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      _dataStreamController.add(data);
+      for (var i = temp.length; i < data.length; i++) {
+        if (formatDate2(data[i]['date']) == "03/16/2024") {
           temp.add(data[i]['temperature'] / 100);
           time.add(formatDate(data[i]['date']));
           humid.add(data[i]['humidity'] / 100);
         }
-        setState(() {
-          temp;
-          time;
-          humid;
-        });
-      } else {
-        throw Exception('Failed to load data');
       }
+      time.sort((a, b) {
+        var timeA = DateFormat.Hm().parse(a);
+        var timeB = DateFormat.Hm().parse(b);
+        return timeA.compareTo(timeB);
+      });
+      setState(() {
+        temp;
+        time;
+        humid;
+      });
+    } else {
+      throw Exception('Failed to load data');
     }
+    print(time);
+  }
+
+  String formatDate2(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    return DateFormat('MM/dd/yyyy').format(dateTime.toLocal());
   }
 
   String formatDate(String dateString) {
@@ -106,11 +114,20 @@ class _stat_pageState extends State<stat_page> {
                           ],
                           size: Size(time.length * 100, 400),
                           labelX: time,
-                          labelY: ['20', '40', '60', '80', '100'],
+                          labelY: [
+                            '5',
+                            '10',
+                            '15',
+                            '20',
+                            '25',
+                            '30',
+                            '35',
+                            '40'
+                          ],
                           graphColor: Colors.white30,
-                          graphOpacity: 0.2,
+                          graphOpacity: 0.3,
                           verticalFeatureDirection: true,
-                          descriptionHeight: 130,
+                          descriptionHeight: 80,
                         )),
               SizedBox(
                 height: 30,
@@ -150,6 +167,11 @@ class _stat_pageState extends State<stat_page> {
           ),
         )
       ]),
+      floatingActionButton: FloatingActionButton(
+        onPressed: fetchData,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
