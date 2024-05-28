@@ -53,6 +53,8 @@ dependencies:
   share: ^2.0.4
   permission_handler: ^11.0.1
   fl_chart: ^0.50.0
+  syncfusion_flutter_datagrid: ^25.2.5
+  flutter_speed_dial: ^7.0.0
   
   
 

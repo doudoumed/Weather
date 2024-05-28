@@ -358,6 +358,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.17"
+  flutter_speed_dial:
+    dependency: "direct main"
+    description:
+      name: flutter_speed_dial
+      sha256: "698a037274a66dbae8697c265440e6acb6ab6cae9ac5f95c749e7944d8f28d41"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -773,6 +781,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: "63108a33f9b0d89f7b6b56cce908b8e519fe433dbbe0efcf41ad3e8bb2081bd9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "25.2.5"
+  syncfusion_flutter_datagrid:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_datagrid
+      sha256: ef21242fccc87a1579691fbc43056d66bc91603da1ebaa9c6f3b0e6a20626362
+      url: "https://pub.dev"
+    source: hosted
+    version: "25.2.5"
   term_glyph:
     dependency: transitive
     description:

@@ -6,6 +6,7 @@ import 'package:weather_monitoring/pages/home.dart';
 import 'package:weather_monitoring/pages/remot_page.dart';
 import 'package:weather_monitoring/pages/signUp.dart';
 import 'package:weather_monitoring/pages/statistcs_page.dart';
+import 'package:weather_monitoring/pages/table.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
           "login": (context) => LoginPage(),
           "stat": (context) => stat_page(),
           "remot": (context) => remote_page(),
+          "table": (context) => TableData(),
         });
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +17,19 @@ final databaseReference = FirebaseDatabase.instance.ref("StoreData/data");
 bool? status;
 
 class _remote_pageState extends State<remote_page> {
+  List<QueryDocumentSnapshot> sensors = [];
+  getdata() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection("sensors").get();
+      sensors.addAll(querySnapshot.docs);
+      setState(() {});
+      print(sensors.length);
+    } catch (e) {
+      print("+++++++++++++++++++++++++++++++++");
+    }
+  }
+
   Future<Map<String, dynamic>> fetchData() async {
     final response = await http.get(Uri.parse(
         'https://weather-21208-default-rtdb.europe-west1.firebasedatabase.app/StoreData/data.json'));
@@ -37,7 +51,6 @@ class _remote_pageState extends State<remote_page> {
         status = true;
       }
     });
-    print('data+++++++++++ $status');
   }
 
   @override
@@ -45,6 +58,7 @@ class _remote_pageState extends State<remote_page> {
     // TODO: implement initState
     super.initState();
     get();
+    getdata();
   }
 
   @override
@@ -68,6 +82,7 @@ class _remote_pageState extends State<remote_page> {
                 )
               : SensorCard(
                   status: status,
+                  sensors: sensors,
                 ),
         ),
       ]),

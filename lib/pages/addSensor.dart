@@ -39,6 +39,7 @@ class _AddPlaceState extends State<AddPlace> {
       'name': Sensorname.text,
       'image': url,
     });
+
     /*try {
       firebase_storeg.UploadTask uploadTask;
       firebase_storeg.Reference ref = firebase_storeg.FirebaseStorage.instance
